@@ -1,0 +1,8 @@
+name,price,author
+amar,42,cse
+rohini,21,ece
+aman,3,cse
+rahul,45,ee
+pratik,65,cse
+raunak,23,me
+suvam,68,me
