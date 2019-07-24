@@ -6,13 +6,13 @@
 package ltudjava18hcb18424016bt1;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 /**
  *
@@ -24,107 +24,53 @@ public class Ltudjava18hcb18424016bt1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        List<Book> books = readBooksFromCSV("books.csv");
 
-        // let's print all the person read from CSV file
-        books.forEach((b) -> {
-            System.out.println(b);
-        });
-//        for (Book b : books) {
-//            System.out.println(b);
-//        }
+        // Tạo một đối tượng BufferedReader
+        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
+        // Biến name
 
-    }
+        String name = "";
+        System.out.println("Please Enter Your Name:");
 
-    private static List<Book> readBooksFromCSV(String fileName) {
-        List<Book> books = new ArrayList<>();
-        Path pathToFile = Paths.get(fileName);
-
-        // create an instance of BufferedReader
-        // using try with resource, Java 7 feature to close resources
-        try (BufferedReader br = Files.newBufferedReader(pathToFile,
-                StandardCharsets.US_ASCII)) {
-
-            // read the first line from the text file
-            String line = br.readLine();
-
-            // loop until all lines are read
-            while (line != null) {
-
-                // use string.split to load a string array with the values from
-                // each line of
-                // the file, using a comma as the delimiter
-                String[] attributes = line.split(",");
-
-                Book book = createBook(attributes);
-
-                // adding book into ArrayList
-                books.add(book);
-
-                // read next line before looping
-                // if end of file reached, line would be null
-                line = br.readLine();
-            }
-
-        } catch (IOException ioe) {
-            //   ioe.printStackTrace();
+        // Tiến hành đọc từ bàn phím
+        try {
+            name = dataIn.readLine();
+        } catch (IOException e) {
+            System.out.println("Error!");
         }
 
-        return books;
+        // hiển thị tên
+        System.out.println("Hello " + name + "!");
+
+        String csvFile = "../../input/" + name;
+        BufferedReader br = null;
+        String line = "";
+        String cvsSplitBy = ",";
+        String Output = "database/" + name;
+        try {
+            PrintWriter pw = new PrintWriter(Output);
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+                //String[] country = line.split(cvsSplitBy);
+                //System.out.println("Country [code= " + country[4] + " , name=" + country[5] + "]");
+                System.out.println(line);
+                pw.close();
+                try (FileWriter fw = new FileWriter(Output, true);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        PrintWriter out = new PrintWriter(bw)) {
+                    out.println(line);
+                } catch (IOException e) {
+                }
+            }
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
-
-    private static Book createBook(String[] metadata) {
-        String name = metadata[0];
-        // int price;
-        String price = metadata[1];
-        String author = metadata[2];
-
-        // create and return book of this metadata
-        return new Book(name, price, author);
-    }
-}
-
-class Book {
-
-    private String name;
-    private String price;
-    private String author;
-
-    public Book(String name, String price, String author) {
-        this.name = name;
-        this.price = price;
-        this.author = author;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    @Override
-    public String toString() {
-        return "Book [name=" + name + ", price=" + price + ", author=" + author
-                + "]";
-    }
-
 }
