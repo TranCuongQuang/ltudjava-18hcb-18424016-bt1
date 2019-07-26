@@ -32,16 +32,14 @@ public class Ltudjava18hcb18424016bt1 {
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
-//        Pattern pattern = Pattern.compile("\\d*");
-//        Matcher matcher = pattern.matcher(strF);
-//        if (matcher.matches()) {
-        function = Integer.parseInt(strF);
-        System.out.println("Bạn đã chọn chức năng: " + function);
-//            return function;
-//        } else {
-//            System.out.println("Bạn vừa nhập vào không phải số, vui lòng nhập lại !");
-//            ChooseFunction();
-//        }
+        Pattern pattern = Pattern.compile("\\d*");
+        Matcher matcher = pattern.matcher(strF);
+        if (matcher.matches()) {
+            function = Integer.parseInt(strF);
+            System.out.println("Bạn đã chọn chức năng: " + function);
+        } else {
+            System.out.println("Bạn vừa nhập vào không phải số, vui lòng nhập lại !");
+        }
         return function;
 
     }
@@ -51,13 +49,16 @@ public class Ltudjava18hcb18424016bt1 {
         int continueF = 0;
         System.out.print("Thực hiện tiếp chương trình (1: Có, 0: Không): ");
         String strC = dataIn.readLine();
-//        Pattern pattern = Pattern.compile("\\d*");
-//        Matcher matcher = pattern.matcher(strC);
-//        if (matcher.matches()) {
-        continueF = Integer.parseInt(strC);
-//        } else {
-//            Countiue();
-//        }
+        Pattern pattern = Pattern.compile("\\d*");
+        Matcher matcher = pattern.matcher(strC);
+        if (matcher.matches()) {
+            continueF = Integer.parseInt(strC);
+        } else {
+            System.out.println("Bạn vừa nhập vào không phải số, vui lòng nhập lại !");
+            continueF = 1;
+            Countiue();
+
+        }
         return continueF;
     }
 
@@ -74,14 +75,27 @@ public class Ltudjava18hcb18424016bt1 {
 
             // Đọc và ghi file
             BufferedReader br = null;
+            BufferedReader wr = null;
             String line = "";
+
             String Path = "database/Class_" + output + ".txt";
             try {
-                PrintWriter pw = new PrintWriter(Path);
+                int iteration = 0;
                 br = new BufferedReader(new FileReader(input));
+                wr = new BufferedReader(new FileReader(Path));
+                String linewr = wr.readLine();
+                // Xóa trong file
+                // pw = new PrintWriter(Path);
+                // pw.close(); để trong while
                 while ((line = br.readLine()) != null) {
                     System.out.println(line);
-                    pw.close();
+                    if (linewr != null) {
+                        // Nếu có dữ liệu thì bỏ qua title
+                        if (iteration == 0) {
+                            iteration++;
+                            continue;
+                        }
+                    }
                     WriteData(Path, line);
                 }
             } catch (FileNotFoundException e) {
@@ -105,7 +119,6 @@ public class Ltudjava18hcb18424016bt1 {
 
             System.out.print("Nhập tên lớp: ");
             ClassName = dataIn.readLine();
-            String Path = "database/Class_" + ClassName + ".txt";
             System.out.print("Nhập MSSV: ");
             StudentID = dataIn.readLine();
             System.out.print("Nhập tên SV: ");
@@ -115,33 +128,23 @@ public class Ltudjava18hcb18424016bt1 {
             System.out.print("Nhập CMND: ");
             CardNumber = dataIn.readLine();
 
-            BufferedReader br = null;
-            String line = "";
-            try {
-                //PrintWriter pw = new PrintWriter(Path);
-                br = new BufferedReader(new FileReader(Path));
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
-                    //pw.close();
-                    //WriteData(Path, line);
-                }
-            } catch (FileNotFoundException e) {
-            } catch (IOException e) {
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                    }
-                } else {
-                    System.out.println("Lớp học không tồn tại.");
-                }
-            }
+            String Path = "database/Class_" + ClassName + ".txt";
+            WriteData(Path, StudentID + "," + Name + "," + Gender + "," + CardNumber);
         } else {
-            System.out.print("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
+            System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
 
-        int continueF = Countiue();
+        int continueF = 0;
+        System.out.print("Thực hiện tiếp chương trình (1: Có, 0: Không): ");
+        String strC = dataIn.readLine();
+        Pattern pattern = Pattern.compile("\\d*");
+        Matcher matcher = pattern.matcher(strC);
+        if (matcher.matches()) {
+            continueF = Integer.parseInt(strC);
+        } else {
+            System.out.println("Bạn vừa nhập vào không phải số, vui lòng nhập lại !");
+        }
+
         if (continueF == 1) {
             DQ();
         }
