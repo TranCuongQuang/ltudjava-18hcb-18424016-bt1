@@ -121,17 +121,35 @@ public class Ltudjava18hcb18424016bt1 {
         }
     }
 
-    public static void WriteByKeyBoard(String file, String Title, String Data) {
+    public static void WriteByKeyBoard(String file, String Title, String Data, String Key) {
         BufferedReader wr = null;
         String Path = "database/" + file + ".txt";
+
         try {
             wr = new BufferedReader(new FileReader(Path));
-            String linewr = "";
-            if ((linewr = wr.readLine()) != null) {
-                WriteData(Path, Data);
+            String line = "";
+            int Check = 0;
+            if ((line = wr.readLine()) != null) {
+                while ((line = wr.readLine()) != null) {
+                    // System.out.println(line);
+                    String[] item = line.split(",");
+                    // Kiểm tra trùng dữ liệu
+                    if (item[0].equals(Key)) {
+                        Check = 1;
+                        break;
+                    }
+                }
+
+                if (Check == 0) {
+                    WriteData(Path, Data);
+                }
             } else {
-                WriteData(Path, Title);
-                WriteData(Path, Data);
+                if (!Title.equals("")) {
+                    WriteData(Path, Title);
+                    WriteData(Path, Data);
+                } else {
+                    System.out.println("File không tồn tại.");
+                }
             }
 
         } catch (FileNotFoundException e) {
@@ -143,8 +161,12 @@ public class Ltudjava18hcb18424016bt1 {
                 } catch (IOException e) {
                 }
             } else {
-                WriteData(Path, Title);
-                WriteData(Path, Data);
+                if (!Title.equals("")) {
+                    WriteData(Path, Title);
+                    WriteData(Path, Data);
+                } else {
+                    System.out.println("File không tồn tại.");
+                }
             }
         }
     }
@@ -156,7 +178,7 @@ public class Ltudjava18hcb18424016bt1 {
         System.out.println("1: Import danh sách sinh viên 1 lớp.");
         System.out.println("2: Thêm thủ công sinh viên.");
         System.out.println("3: Import thời khóa biểu 1 lớp.");
-        System.out.println("4: Thêm, xóa thủ công sinh viên khỏi tkb lớp học.");
+        System.out.println("4: Thêm, xóa sinh viên khỏi tkb lớp học.");
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -166,7 +188,7 @@ public class Ltudjava18hcb18424016bt1 {
             function = Integer.parseInt(strF);
             System.out.println("Bạn đã chọn chức năng: " + function);
         } else {
-            System.out.println("Bạn vừa nhập vào không phải số, vui lòng nhập lại !");
+            System.out.println("Bạn vừa nhập vào không phải số!");
         }
         return function;
 
@@ -217,10 +239,52 @@ public class Ltudjava18hcb18424016bt1 {
             String Tile = "MSSV,Họ tên,Giới tính,CMND";
             String file = "Class_" + ClassName;
 
-            WriteByKeyBoard(file, Tile, Data);
+            WriteByKeyBoard(file, Tile, Data, StudentID);
         } else if (function == 3) {
             ImportFile(dataIn, "TKB_");
+        } else if (function == 4) {
+            String ClassName = "";
+            String Subject = "";
+            String StudentID = "";
+            String Name = "";
+            String Gender = "";
+            String CardNumber = "";
+            int Choose = 2;
+            System.out.print("Chọn chức năng (1: Thêm, 0: Xóa): ");
 
+            // Tiến hành đọc từ bàn phím
+            String strF = dataIn.readLine();
+            Pattern pattern = Pattern.compile("\\d*");
+            Matcher matcher = pattern.matcher(strF);
+            if (matcher.matches()) {
+                Choose = Integer.parseInt(strF);
+                if (Choose == 1) {
+                    System.out.print("Nhập tên lớp: ");
+                    ClassName = dataIn.readLine();
+                    System.out.print("Nhập môn học: ");
+                    Subject = dataIn.readLine();
+                    System.out.print("Nhập MSSV: ");
+                    StudentID = dataIn.readLine();
+                    System.out.print("Nhập tên SV: ");
+                    Name = dataIn.readLine();
+                    System.out.print("Nhập giới tính: ");
+                    Gender = dataIn.readLine();
+                    System.out.print("Nhập CMND: ");
+                    CardNumber = dataIn.readLine();
+
+                    String Data = StudentID + "," + Name + "," + Gender + "," + CardNumber;
+                    String Tile = "";
+                    String file = "Class_" + ClassName + "_" + Subject;
+
+                    WriteByKeyBoard(file, Tile, Data, StudentID);
+                } else if (Choose == 0) {
+
+                } else {
+                    System.out.println("Bạn không chọn đúng chức năng!");
+                }
+            } else {
+                System.out.println("Bạn vừa nhập vào không phải số!");
+            }
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
@@ -232,12 +296,11 @@ public class Ltudjava18hcb18424016bt1 {
         Matcher matcher = pattern.matcher(strC);
         if (matcher.matches()) {
             continueF = Integer.parseInt(strC);
+            if (continueF == 1) {
+                DQ();
+            }
         } else {
             System.out.println("Bạn vừa nhập vào không phải số, vui lòng nhập lại !");
-        }
-
-        if (continueF == 1) {
-            DQ();
         }
     }
 
