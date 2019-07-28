@@ -22,13 +22,101 @@ public class Ltudjava18hcb18424016bt1 {
         }
     }
 
+    public static void ImportFile(BufferedReader dataIn, String refix) throws IOException {
+        String input = "";
+        String output = "";
+        System.out.print("Nhập tên file inport: ");
+        input = dataIn.readLine();
+        System.out.print("Nhập tên file lưu: ");
+        output = dataIn.readLine();
+
+        // Đọc và ghi file
+        BufferedReader br = null;
+        BufferedReader wr = null;
+        String line = "";
+        String Path = "database/" + refix + output + ".txt";
+        try {
+            int iteration = 0;
+            br = new BufferedReader(new FileReader(input));
+            wr = new BufferedReader(new FileReader(Path));
+            String linewr = wr.readLine();
+            // Xóa trong file
+            // pw = new PrintWriter(Path);
+            // pw.close(); để trong while
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+                if (linewr != null) {
+                    // Nếu có dữ liệu thì bỏ qua title
+                    if (iteration == 0) {
+                        iteration++;
+                        continue;
+                    }
+                }
+                WriteData(Path, line);
+            }
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } finally {
+            if (wr != null) {
+                try {
+                    wr.close();
+                } catch (IOException e) {
+                }
+            } else {
+                if (br != null) {
+                    while ((line = br.readLine()) != null) {
+                        System.out.println(line);
+                        WriteData(Path, line);
+                    }
+                }
+            }
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                }
+            } else {
+                System.out.println("File không tồn tại.");
+            }
+        }
+    }
+
+    public static void WriteByKeyBoard(String file, String Title, String Data) {
+        BufferedReader wr = null;
+        String Path = "database/" + file + ".txt";
+        try {
+            wr = new BufferedReader(new FileReader(Path));
+            String linewr = "";
+            if ((linewr = wr.readLine()) != null) {
+                WriteData(Path, Data);
+            } else {
+                WriteData(Path, Title);
+                WriteData(Path, Data);
+            }
+
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } finally {
+            if (wr != null) {
+                try {
+                    wr.close();
+                } catch (IOException e) {
+                }
+            } else {
+                WriteData(Path, Title);
+                WriteData(Path, Data);
+            }
+        }
+    }
+
     public static int ChooseFunction() throws IOException {
         BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
         int function = 0;
         System.out.println("Chọn chức năng: ");
         System.out.println("1: Import danh sách sinh viên 1 lớp.");
         System.out.println("2: Thêm thủ công sinh viên.");
-        System.out.println("3: Thêm, xóa thủ công sinh viên khỏi tkb lớp học.");
+        System.out.println("3: Import thời khóa biểu 1 lớp.");
+        System.out.println("4: Thêm, xóa thủ công sinh viên khỏi tkb lớp học.");
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -66,50 +154,7 @@ public class Ltudjava18hcb18424016bt1 {
         BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
         int function = ChooseFunction();
         if (function == 1) {
-            String input = "";
-            String output = "";
-            System.out.print("Nhập tên file inport: ");
-            input = dataIn.readLine();
-            System.out.print("Nhập tên file lưu: ");
-            output = dataIn.readLine();
-
-            // Đọc và ghi file
-            BufferedReader br = null;
-            BufferedReader wr = null;
-            String line = "";
-
-            String Path = "database/Class_" + output + ".txt";
-            try {
-                int iteration = 0;
-                br = new BufferedReader(new FileReader(input));
-                wr = new BufferedReader(new FileReader(Path));
-                String linewr = wr.readLine();
-                // Xóa trong file
-                // pw = new PrintWriter(Path);
-                // pw.close(); để trong while
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
-                    if (linewr != null) {
-                        // Nếu có dữ liệu thì bỏ qua title
-                        if (iteration == 0) {
-                            iteration++;
-                            continue;
-                        }
-                    }
-                    WriteData(Path, line);
-                }
-            } catch (FileNotFoundException e) {
-            } catch (IOException e) {
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                    }
-                } else {
-                    System.out.println("Lớp học không tồn tại.");
-                }
-            }
+            ImportFile(dataIn, "Class_");
         } else if (function == 2) {
             String ClassName = "";
             String StudentID = "";
@@ -127,9 +172,14 @@ public class Ltudjava18hcb18424016bt1 {
             Gender = dataIn.readLine();
             System.out.print("Nhập CMND: ");
             CardNumber = dataIn.readLine();
-
-            String Path = "database/Class_" + ClassName + ".txt";
-            WriteData(Path, StudentID + "," + Name + "," + Gender + "," + CardNumber);
+            
+            String Data = StudentID + "," + Name + "," + Gender + "," + CardNumber;
+            String Tile = "MSSV,Họ tên,Giới tính,CMND";
+            String file = "Class_" + ClassName;
+            
+            WriteByKeyBoard(file, Tile, Data);
+        } else if (function == 3) {
+            ImportFile(dataIn, "TKB_");
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
