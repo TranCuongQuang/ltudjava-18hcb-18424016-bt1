@@ -36,23 +36,25 @@ public class Ltudjava18hcb18424016bt1 {
         String line = "";
         String Path = "database/" + refix + output + ".txt";
         try {
-            int iteration = 0;
             br = new BufferedReader(new FileReader(input));
             wr = new BufferedReader(new FileReader(Path));
-            String linewr = wr.readLine();
-            // Xóa trong file
-            // pw = new PrintWriter(Path);
-            // pw.close(); để trong while
+            String linewr = "";
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
-                if (linewr != null) {
-                    // Nếu có dữ liệu thì bỏ qua title
-                    if (iteration == 0) {
-                        iteration++;
-                        continue;
+                String[] itemImport = line.split(",");
+                int Check = 0;
+                wr = new BufferedReader(new FileReader(Path));
+                while ((linewr = wr.readLine()) != null) {
+                    String[] item = linewr.split(",");
+                    // Kiểm tra trùng dữ liệu
+                    if (itemImport[0].equals(item[0])) {
+                        Check = 1;
+                        break;
                     }
                 }
-                WriteData(Path, line);
+
+                if (Check == 0) {
+                    WriteData(Path, line);
+                }
             }
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
@@ -65,7 +67,7 @@ public class Ltudjava18hcb18424016bt1 {
             } else {
                 if (br != null) {
                     while ((line = br.readLine()) != null) {
-                        System.out.println(line);
+                        //System.out.println(line);
                         WriteData(Path, line);
                     }
                 }
@@ -77,6 +79,44 @@ public class Ltudjava18hcb18424016bt1 {
                 }
             } else {
                 System.out.println("File không tồn tại.");
+            }
+        }
+
+        if (refix == "TKB_") {
+            BufferedReader readClass = null;
+            BufferedReader readTKB = null;
+            String PathClass = "database/Class_" + output + ".txt";
+            String PathTKB = "database/TKB_" + output + ".txt";
+            try {
+                readTKB = new BufferedReader(new FileReader(PathTKB));
+                String lineTKB = readTKB.readLine();
+                String PathWrite = "";
+                while ((lineTKB = readTKB.readLine()) != null) {
+                    //System.out.println(lineTKB);
+                    String[] recordTKB = lineTKB.split(",");
+                    PathWrite = "database/Class_" + output + "_" + recordTKB[0] + ".txt";
+                    readClass = new BufferedReader(new FileReader(PathClass));
+                    String lineClass = "";
+                    // Xóa trống file
+                    PrintWriter pw = new PrintWriter(PathWrite);
+                    pw.close();
+                    while ((lineClass = readClass.readLine()) != null) {
+                        //System.out.println(lineClass);
+                        WriteData(PathWrite, lineClass);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            } finally {
+                if (readClass != null && readTKB != null) {
+                    try {
+                        readClass.close();
+                        readTKB.close();
+                    } catch (IOException e) {
+                    }
+                } else {
+                    System.out.println("File không tồn tại.");
+                }
             }
         }
     }
@@ -172,14 +212,15 @@ public class Ltudjava18hcb18424016bt1 {
             Gender = dataIn.readLine();
             System.out.print("Nhập CMND: ");
             CardNumber = dataIn.readLine();
-            
+
             String Data = StudentID + "," + Name + "," + Gender + "," + CardNumber;
             String Tile = "MSSV,Họ tên,Giới tính,CMND";
             String file = "Class_" + ClassName;
-            
+
             WriteByKeyBoard(file, Tile, Data);
         } else if (function == 3) {
             ImportFile(dataIn, "TKB_");
+
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
