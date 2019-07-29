@@ -388,7 +388,33 @@ public class Ltudjava18hcb18424016bt1 {
                 System.out.println("Bạn vừa nhập vào không phải số!");
             }
         } else if (function == 6) {
+            System.out.print("Nhập tên lớp: ");
+            String ClassName = dataIn.readLine();
+            String file = "TKB_" + ClassName;
 
+            BufferedReader br = null;
+            String line = "";
+            String Path = "database/" + file + ".txt";
+            try {
+                br = new BufferedReader(new FileReader(Path));
+                line = br.readLine();
+                while ((line = br.readLine()) != null) {
+                    String[] item = line.split(",");
+                    System.out.println("Thông tin thời khóa biểu: [Mã môn học: " + item[0] + " , Tên môn học: " + item[1] + " , Phòng: " + item[2] + "]");
+                }
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                    }
+                } else {
+                    System.out.println("File không tồn tại.");
+                }
+            }
+            //   ReadData(file);
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
