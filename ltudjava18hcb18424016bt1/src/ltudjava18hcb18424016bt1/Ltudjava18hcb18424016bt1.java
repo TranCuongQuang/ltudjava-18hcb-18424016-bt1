@@ -23,6 +23,31 @@ public class Ltudjava18hcb18424016bt1 {
         }
     }
 
+    public static void ReadData(String file) {
+        BufferedReader br = null;
+        String line = "";
+        String Path = "database/" + file + ".txt";
+        try {
+            br = new BufferedReader(new FileReader(Path));
+            line = br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] item = line.split(",");
+                System.out.println("Thông tin sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Giới tính: " + item[2] + " , CMND: " + item[3] + "]");
+            }
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                }
+            } else {
+                System.out.println("File không tồn tại.");
+            }
+        }
+    }
+
     public static void ImportFile(BufferedReader dataIn, String refix) throws IOException {
         String input = "";
         String output = "";
@@ -83,7 +108,6 @@ public class Ltudjava18hcb18424016bt1 {
                 System.out.println("File không tồn tại.");
             }
         }
-
         if (refix == "TKB_") {
             BufferedReader readClass = null;
             BufferedReader readTKB = null;
@@ -126,7 +150,6 @@ public class Ltudjava18hcb18424016bt1 {
     public static void WriteByKeyBoard(String file, String Title, String Data, String Key) {
         BufferedReader wr = null;
         String Path = "database/" + file + ".txt";
-
         try {
             wr = new BufferedReader(new FileReader(Path));
             String line = "";
@@ -142,7 +165,6 @@ public class Ltudjava18hcb18424016bt1 {
                         break;
                     }
                 }
-
                 if (Check == 0) {
                     WriteData(Path, Data);
                 }
@@ -182,6 +204,8 @@ public class Ltudjava18hcb18424016bt1 {
         System.out.println("2: Thêm thủ công sinh viên.");
         System.out.println("3: Import thời khóa biểu 1 lớp.");
         System.out.println("4: Thêm, xóa sinh viên khỏi tkb lớp học.");
+        System.out.println("5: Xem danh sách lớp học.");
+        System.out.println("6: Xem danh sách thời khóa biểu.");
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -336,6 +360,35 @@ public class Ltudjava18hcb18424016bt1 {
             } else {
                 System.out.println("Bạn vừa nhập vào không phải số!");
             }
+        } else if (function == 5) {
+            int Choose = 2;
+            System.out.print("Chọn chức năng (0: Xem danh sách lớp, 1: Xem danh sách lớp học môn học): ");
+            // Tiến hành đọc từ bàn phím
+            String strF = dataIn.readLine();
+            Pattern pattern = Pattern.compile("\\d*");
+            Matcher matcher = pattern.matcher(strF);
+            if (matcher.matches()) {
+                Choose = Integer.parseInt(strF);
+                if (Choose == 0) {
+                    System.out.print("Nhập tên lớp: ");
+                    String ClassName = dataIn.readLine();
+                    String file = "Class_" + ClassName;
+                    ReadData(file);
+                } else if (Choose == 1) {
+                    System.out.print("Nhập tên lớp: ");
+                    String ClassName = dataIn.readLine();
+                    System.out.print("Nhập môn học: ");
+                    String Subject = dataIn.readLine();
+                    String file = "Class_" + ClassName + "_" + Subject;
+                    ReadData(file);
+                } else {
+                    System.out.println("Bạn không chọn đúng chức năng!");
+                }
+            } else {
+                System.out.println("Bạn vừa nhập vào không phải số!");
+            }
+        } else if (function == 6) {
+
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
