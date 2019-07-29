@@ -2,6 +2,7 @@ package ltudjava18hcb18424016bt1;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -46,7 +47,8 @@ public class Ltudjava18hcb18424016bt1 {
                 while ((linewr = wr.readLine()) != null) {
                     String[] item = linewr.split(",");
                     // Kiểm tra trùng dữ liệu
-                    if (itemImport[0].equals(item[0])) {
+                    String lineTrim = itemImport[0].trim();
+                    if (lineTrim.equals(item[0].trim())) {
                         Check = 1;
                         break;
                     }
@@ -134,7 +136,8 @@ public class Ltudjava18hcb18424016bt1 {
                     // System.out.println(line);
                     String[] item = line.split(",");
                     // Kiểm tra trùng dữ liệu
-                    if (item[0].equals(Key)) {
+                    String lineTrim = item[0].trim();
+                    if (lineTrim.equals(Key.trim())) {
                         Check = 1;
                         break;
                     }
@@ -278,7 +281,55 @@ public class Ltudjava18hcb18424016bt1 {
 
                     WriteByKeyBoard(file, Tile, Data, StudentID);
                 } else if (Choose == 0) {
+                    System.out.print("Nhập tên lớp: ");
+                    ClassName = dataIn.readLine();
+                    System.out.print("Nhập môn học: ");
+                    Subject = dataIn.readLine();
+                    System.out.print("Nhập MSSV: ");
+                    StudentID = dataIn.readLine();
+                    String file = "Class_" + ClassName + "_" + Subject;
 
+                    BufferedReader reader = null;
+                    BufferedWriter writer = null;
+                    File inputFile = null;
+                    File tempFile = null;
+                    try {
+                        inputFile = new File("database/" + file + ".txt");
+                        tempFile = new File("database/" + file + "_Temp.txt");
+                        reader = new BufferedReader(new FileReader(inputFile));
+                        writer = new BufferedWriter(new FileWriter(tempFile));
+
+                        String currentLine;
+                        while ((currentLine = reader.readLine()) != null) {
+                            String[] item = currentLine.split(",");
+                            String lineToRemove = item[0].trim();
+                            if (lineToRemove.equals(StudentID.trim())) {
+                                continue;
+                            }
+                            writer.write(currentLine + System.getProperty("line.separator"));
+                        }
+
+                    } catch (FileNotFoundException e) {
+                    } catch (IOException e) {
+                    } finally {
+                        if (reader != null) {
+                            try {
+                                writer.close();
+                                reader.close();
+                                //Xóa file tạm
+                                if (!inputFile.delete()) {
+                                    System.out.println("Could not delete file");
+                                }
+                                //Đổi tên file tạm thành file chính
+                                if (!tempFile.renameTo(inputFile)) {
+                                    System.out.println("Could not rename file");
+                                }
+                            } catch (IOException e) {
+                            }
+                        } else {
+                            System.out.println("File không tồn tại.");
+                        }
+                    }
                 } else {
                     System.out.println("Bạn không chọn đúng chức năng!");
                 }
