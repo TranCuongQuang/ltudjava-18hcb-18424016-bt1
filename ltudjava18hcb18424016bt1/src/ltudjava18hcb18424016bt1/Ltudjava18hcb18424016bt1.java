@@ -51,16 +51,24 @@ public class Ltudjava18hcb18424016bt1 {
     public static void ImportFile(BufferedReader dataIn, String refix) throws IOException {
         String input = "";
         String output = "";
+        String Subject = "";
         System.out.print("Nhập tên file inport: ");
         input = dataIn.readLine();
         System.out.print("Nhập tên file lưu: ");
         output = dataIn.readLine();
 
+        if (refix.equals("Score_")) {
+            System.out.print("Nhập môn học: ");
+            Subject = dataIn.readLine();
+        }
         // Đọc và ghi file
         BufferedReader br = null;
         BufferedReader wr = null;
         String line = "";
         String Path = "database/" + refix + output + ".txt";
+        if (refix.equals("Score_")) {
+            Path = "database/" + refix + output + "_" + Subject + ".txt";
+        }
         try {
             br = new BufferedReader(new FileReader(input));
             wr = new BufferedReader(new FileReader(Path));
@@ -206,6 +214,8 @@ public class Ltudjava18hcb18424016bt1 {
         System.out.println("4: Thêm, xóa sinh viên khỏi tkb lớp học.");
         System.out.println("5: Xem danh sách lớp học.");
         System.out.println("6: Xem danh sách thời khóa biểu.");
+        System.out.println("7: Import điểm môn học.");
+        System.out.println("8: Xem bảng điểm.");
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -415,15 +425,87 @@ public class Ltudjava18hcb18424016bt1 {
                 }
             }
             //   ReadData(file);
+        } else if (function == 7) {
+            ImportFile(dataIn, "Score_");
+        } else if (function == 8) {
+            int Choose = 2;
+            System.out.print("Chọn chức năng (0: Xem danh sách điểm, 1: Xem danh sách sinh viên đậu, rớt), 2: Xem tỉ lệ sinh viên đậu, rớt : ");
+            // Tiến hành đọc từ bàn phím
+            String strF = dataIn.readLine();
+            Pattern pattern = Pattern.compile("\\d*");
+            Matcher matcher = pattern.matcher(strF);
+            if (matcher.matches()) {
+                Choose = Integer.parseInt(strF);
+                if (Choose == 0 || Choose == 1 || Choose == 2) {
+                    System.out.print("Nhập tên lớp: ");
+                    String ClassName = dataIn.readLine();
+                    System.out.print("Nhập môn học: ");
+                    String Subject = dataIn.readLine();
+                    String file = "Score_" + ClassName + "_" + Subject;
+                    BufferedReader br = null;
+                    String line = "";
+                    String Path = "database/" + file + ".txt";
+                    try {
+                        br = new BufferedReader(new FileReader(Path));
+                        line = br.readLine();
+                        int countPass = 0;
+                        int countLose = 0;
+                        int countTotal = 0;
+                        while ((line = br.readLine()) != null) {
+                            String[] item = line.split(",");
+                            if (Choose == 0) {
+                                System.out.println("Thông tin điểm sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Điểm giữa kỳ: " + item[2] + " , Điểm cuối kỳ: " + item[3] + " , Điểm khác: " + item[4] + " , Điểm tổng kết: " + item[5] + "]");
+                            } else if (Choose == 1) {
+                                if (Integer.parseInt(item[5]) >= 5) {
+                                    System.out.println("Thông tin điểm sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Kết quả: Đậu]");
+                                } else {
+                                    System.out.println("Thông tin điểm sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Kết quả: Rớt]");
+                                }
+                            } else if (Choose == 2) {
+                                countTotal = countTotal + 1;
+                                if (Integer.parseInt(item[5]) >= 5) {
+                                    countPass = countPass + 1;
+                                } else {
+                                    countLose = countLose + 1;
+                                }
+                            }
+                        }
+                        if (Choose == 2) {
+                            int ratioPass = Math.round(((float) countPass / countTotal) * 100);
+                            int ratioLose = 100 - ratioPass;
+                            System.out.println("Số sinh viên đậu là " + countPass + " chiếm " + ratioPass + "%");
+                            System.out.println("Số sinh viên rớt là " + countLose + " chiếm " + ratioLose + "%");
+                        }
+                    } catch (FileNotFoundException e) {
+                    } catch (IOException e) {
+                    } finally {
+                        if (br != null) {
+                            try {
+                                br.close();
+                            } catch (IOException e) {
+                            }
+                        } else {
+                            System.out.println("File không tồn tại.");
+                        }
+                    }
+                } else {
+                    System.out.println("Bạn không chọn đúng chức năng!");
+                }
+            } else {
+                System.out.println("Bạn vừa nhập vào không phải số!");
+            }
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
 
         int continueF = 0;
-        System.out.print("Thực hiện tiếp chương trình (1: Có, 0: Không): ");
+
+        System.out.print(
+                "Thực hiện tiếp chương trình (1: Có, 0: Không): ");
         String strC = dataIn.readLine();
         Pattern pattern = Pattern.compile("\\d*");
         Matcher matcher = pattern.matcher(strC);
+
         if (matcher.matches()) {
             continueF = Integer.parseInt(strC);
             if (continueF == 1) {
