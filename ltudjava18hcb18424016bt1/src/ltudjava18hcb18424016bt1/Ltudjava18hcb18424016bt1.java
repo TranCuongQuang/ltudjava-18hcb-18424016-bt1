@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
 public class Ltudjava18hcb18424016bt1 {
 
     public static void WriteData(String Path, String Data) {
+        File directory = new File("database/");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
         try (FileWriter fw = new FileWriter(Path, true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 PrintWriter out = new PrintWriter(bw)) {
@@ -23,7 +27,7 @@ public class Ltudjava18hcb18424016bt1 {
         }
     }
 
-    public static void ReadData(String file) {
+    public static void ReadData(String file, String refix) {
         BufferedReader br = null;
         String line = "";
         String Path = "database/" + file + ".txt";
@@ -32,7 +36,11 @@ public class Ltudjava18hcb18424016bt1 {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] item = line.split(",");
-                System.out.println("Thông tin sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Giới tính: " + item[2] + " , CMND: " + item[3] + "]");
+                if (refix.equals("Class")) {
+                    System.out.println("Thông tin sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Giới tính: " + item[2] + " , CMND: " + item[3] + "]");
+                } else if (refix.equals("TKB")) {
+                    System.out.println("Thông tin thời khóa biểu: [Mã môn học: " + item[0] + " , Tên môn học: " + item[1] + " , Phòng: " + item[2] + "]");
+                }
             }
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
@@ -216,6 +224,7 @@ public class Ltudjava18hcb18424016bt1 {
         System.out.println("6: Xem danh sách thời khóa biểu.");
         System.out.println("7: Import điểm môn học.");
         System.out.println("8: Xem bảng điểm.");
+        System.out.println("9: Sửa điểm sinh viên.");
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -383,14 +392,14 @@ public class Ltudjava18hcb18424016bt1 {
                     System.out.print("Nhập tên lớp: ");
                     String ClassName = dataIn.readLine();
                     String file = "Class_" + ClassName;
-                    ReadData(file);
+                    ReadData(file, "Class");
                 } else if (Choose == 1) {
                     System.out.print("Nhập tên lớp: ");
                     String ClassName = dataIn.readLine();
                     System.out.print("Nhập môn học: ");
                     String Subject = dataIn.readLine();
                     String file = "Class_" + ClassName + "_" + Subject;
-                    ReadData(file);
+                    ReadData(file, "Class");
                 } else {
                     System.out.println("Bạn không chọn đúng chức năng!");
                 }
@@ -401,30 +410,7 @@ public class Ltudjava18hcb18424016bt1 {
             System.out.print("Nhập tên lớp: ");
             String ClassName = dataIn.readLine();
             String file = "TKB_" + ClassName;
-
-            BufferedReader br = null;
-            String line = "";
-            String Path = "database/" + file + ".txt";
-            try {
-                br = new BufferedReader(new FileReader(Path));
-                line = br.readLine();
-                while ((line = br.readLine()) != null) {
-                    String[] item = line.split(",");
-                    System.out.println("Thông tin thời khóa biểu: [Mã môn học: " + item[0] + " , Tên môn học: " + item[1] + " , Phòng: " + item[2] + "]");
-                }
-            } catch (FileNotFoundException e) {
-            } catch (IOException e) {
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                    }
-                } else {
-                    System.out.println("File không tồn tại.");
-                }
-            }
-            //   ReadData(file);
+            ReadData(file, "TKB");
         } else if (function == 7) {
             ImportFile(dataIn, "Score_");
         } else if (function == 8) {
@@ -494,6 +480,8 @@ public class Ltudjava18hcb18424016bt1 {
             } else {
                 System.out.println("Bạn vừa nhập vào không phải số!");
             }
+        } else if (function == 9) {
+
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
