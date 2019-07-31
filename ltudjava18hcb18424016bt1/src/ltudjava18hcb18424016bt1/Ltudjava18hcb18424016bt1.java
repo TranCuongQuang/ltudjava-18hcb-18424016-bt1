@@ -15,11 +15,13 @@ import java.util.regex.Pattern;
 
 public class Ltudjava18hcb18424016bt1 {
 
-    public static void WriteData(String Path, String Data) {
-        File directory = new File("database/");
+    public static void CreateFolder(){
+         File directory = new File("database/");
         if (!directory.exists()) {
             directory.mkdir();
         }
+    }
+    public static void WriteData(String Path, String Data) {
         try (FileWriter fw = new FileWriter(Path, true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 PrintWriter out = new PrintWriter(bw)) {
@@ -214,6 +216,7 @@ public class Ltudjava18hcb18424016bt1 {
     }
 
     public static int ChooseFunction() throws IOException {
+        CreateFolder();
         BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
         int function = 0;
         System.out.println("Chọn chức năng: ");
@@ -575,13 +578,10 @@ public class Ltudjava18hcb18424016bt1 {
         }
 
         int continueF = 0;
-
-        System.out.print(
-                "Thực hiện tiếp chương trình (1: Có, 0: Không): ");
+        System.out.print("Thực hiện tiếp chương trình (1: Có, 0: Không): ");
         String strC = dataIn.readLine();
         Pattern pattern = Pattern.compile("\\d*");
         Matcher matcher = pattern.matcher(strC);
-
         if (matcher.matches()) {
             continueF = Integer.parseInt(strC);
             if (continueF == 1) {
