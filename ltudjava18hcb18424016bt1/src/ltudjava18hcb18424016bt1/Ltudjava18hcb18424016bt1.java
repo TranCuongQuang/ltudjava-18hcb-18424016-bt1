@@ -226,6 +226,7 @@ public class Ltudjava18hcb18424016bt1 {
         System.out.println("7: Import điểm môn học.");
         System.out.println("8: Xem bảng điểm.");
         System.out.println("9: Sửa điểm sinh viên.");
+        System.out.println("10: Xem điểm sinh viên.");
 
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -522,6 +523,39 @@ public class Ltudjava18hcb18424016bt1 {
                     pw.close();
                     for (String s : lines) {
                         WriteData(Path, s);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                    }
+                } else {
+                    System.out.println("File không tồn tại.");
+                }
+            }
+        } else if (function == 10) {
+            System.out.print("Nhập tên lớp: ");
+            String ClassName = dataIn.readLine();
+            System.out.print("Nhập môn học: ");
+            String Subject = dataIn.readLine();
+            System.out.print("Nhập MSSV: ");
+            String StudentID = dataIn.readLine();
+            String file = "Score_" + ClassName + "_" + Subject;
+
+            BufferedReader br = null;
+            String line = "";
+            String Path = "database/" + file + ".txt";
+            try {
+                br = new BufferedReader(new FileReader(Path));
+                while ((line = br.readLine()) != null) {
+                    String[] item = line.split(",");
+                    if (item[0].equals(StudentID)) {
+                        System.out.println("Thông tin điểm sinh viên: [MSSV: " + item[0] + " , Họ tên: " + item[1] + " , Điểm giữa kỳ: " + item[2] + " , Điểm cuối kỳ: " + item[3] + " , Điểm khác: " + item[4] + " , Điểm tổng kết: " + item[5] + "]");
+                        break;
                     }
                 }
             } catch (FileNotFoundException e) {
