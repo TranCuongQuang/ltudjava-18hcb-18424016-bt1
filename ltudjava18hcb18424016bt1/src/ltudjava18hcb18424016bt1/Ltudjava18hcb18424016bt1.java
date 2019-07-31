@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -481,7 +482,60 @@ public class Ltudjava18hcb18424016bt1 {
                 System.out.println("Bạn vừa nhập vào không phải số!");
             }
         } else if (function == 9) {
+            System.out.print("Nhập tên lớp: ");
+            String ClassName = dataIn.readLine();
+            System.out.print("Nhập môn học: ");
+            String Subject = dataIn.readLine();
+            System.out.print("Nhập MSSV: ");
+            String StudentID = dataIn.readLine();
 
+            System.out.print("Nhập điểm giữa kỳ: ");
+            String Score1 = dataIn.readLine();
+            System.out.print("Nhập điểm cuối kỳ: ");
+            String Score2 = dataIn.readLine();
+            System.out.print("Nhập điểm khác: ");
+            String Score3 = dataIn.readLine();
+            System.out.print("Nhập điểm tổng: ");
+            String Score4 = dataIn.readLine();
+
+            String file = "Score_" + ClassName + "_" + Subject;
+            ArrayList<String> lines = new ArrayList<String>();
+            BufferedReader br = null;
+            String line = "";
+            String Path = "database/" + file + ".txt";
+            try {
+                br = new BufferedReader(new FileReader(Path));
+                while ((line = br.readLine()) != null) {
+                    String[] item = line.split(",");
+                    String temp = line;
+                    if (item[0].equals(StudentID)) {
+                        item[2] = Score1;
+                        item[3] = Score2;
+                        item[4] = Score3;
+                        item[5] = Score4;
+                        temp = String.join(",", item);
+                    }
+                    lines.add(temp);
+                }
+                if (lines.size() != 0) {
+                    PrintWriter pw = new PrintWriter(Path);
+                    pw.close();
+                    for (String s : lines) {
+                        WriteData(Path, s);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                    }
+                } else {
+                    System.out.println("File không tồn tại.");
+                }
+            }
         } else {
             System.out.println("Chức năng không tồn tại. Vui lòng kiểm tra lại.");
         }
