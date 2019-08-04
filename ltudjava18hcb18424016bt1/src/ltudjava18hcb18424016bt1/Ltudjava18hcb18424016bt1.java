@@ -282,8 +282,10 @@ public class Ltudjava18hcb18424016bt1 {
             System.out.println("7: Import điểm môn học.");
             System.out.println("8: Xem bảng điểm.");
             System.out.println("9: Sửa điểm sinh viên.");
+            System.out.println("11: Đổi mật khẩu.");
         } else if (Role.equals("SV")) {
             System.out.println("10: Xem điểm sinh viên.");
+            System.out.println("11: Đổi mật khẩu.");
         }
         // Tiến hành đọc từ bàn phím
         String strF = dataIn.readLine();
@@ -636,6 +638,54 @@ public class Ltudjava18hcb18424016bt1 {
                         }
                     } else {
                         System.out.println("Không tìm thấy điểm.");
+                    }
+                }
+            } else if (function == 11 && (Role.equals("GV") || Role.equals("SV"))) {
+                System.out.print("Nhập tên đăng nhập: ");
+                String UserName = dataIn.readLine();
+                System.out.print("Nhập mật khẩu cũ: ");
+                String PassOld = dataIn.readLine();
+                System.out.print("Nhập mật khẩu mới: ");
+                String PassNew = dataIn.readLine();
+
+                ArrayList<String> lines = new ArrayList<String>();
+                BufferedReader br = null;
+                String line = "";
+                String Path = "database/User.txt";
+                try {
+                    br = new BufferedReader(new FileReader(Path));
+                    int check = 0;
+                    while ((line = br.readLine()) != null) {
+                        String[] item = line.split(",");
+                        String temp = line;
+                        if (item[0].equals(UserName) && item[1].equals(PassOld)) {
+                            item[1] = PassNew;
+                            temp = String.join(",", item);
+                            check = 1;
+                        }
+                        lines.add(temp);
+                    }
+                    if (lines.size() != 0) {
+                        PrintWriter pw = new PrintWriter(Path);
+                        pw.close();
+                        for (String s : lines) {
+                            WriteData(Path, s);
+                        }
+                    }
+
+                    if (check == 0) {
+                        System.out.println("Tên đăng nhập hoặc mật khẩu không đúng.");
+                    }
+                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
+                } finally {
+                    if (br != null) {
+                        try {
+                            br.close();
+                        } catch (IOException e) {
+                        }
+                    } else {
+                        System.out.println("File không tồn tại.");
                     }
                 }
             } else {
