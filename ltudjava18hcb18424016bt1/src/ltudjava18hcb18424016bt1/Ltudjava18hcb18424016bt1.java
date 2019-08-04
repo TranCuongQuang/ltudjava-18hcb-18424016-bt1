@@ -3,6 +3,7 @@ package ltudjava18hcb18424016bt1;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,12 +16,13 @@ import java.util.regex.Pattern;
 
 public class Ltudjava18hcb18424016bt1 {
 
-    public static void CreateFolder(){
-         File directory = new File("database/");
+    public static void CreateFolder() {
+        File directory = new File("database/");
         if (!directory.exists()) {
             directory.mkdir();
         }
     }
+
     public static void WriteData(String Path, String Data) {
         try (FileWriter fw = new FileWriter(Path, true);
                 BufferedWriter bw = new BufferedWriter(fw);
@@ -35,7 +37,8 @@ public class Ltudjava18hcb18424016bt1 {
         String line = "";
         String Path = "database/" + file + ".txt";
         try {
-            br = new BufferedReader(new FileReader(Path));
+            //br = new BufferedReader(new FileReader(Path));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(Path), "UTF-8"));
             line = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] item = line.split(",");
@@ -81,8 +84,11 @@ public class Ltudjava18hcb18424016bt1 {
             Path = "database/" + refix + output + "_" + Subject + ".txt";
         }
         try {
-            br = new BufferedReader(new FileReader(input));
-            wr = new BufferedReader(new FileReader(Path));
+            // br = new BufferedReader(new FileReader(input));
+            // wr = new BufferedReader(new FileReader(Path));
+
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
+            wr = new BufferedReader(new InputStreamReader(new FileInputStream(Path), "UTF-8"));
             String linewr = "";
             while ((line = br.readLine()) != null) {
                 String[] itemImport = line.split(",");
@@ -113,7 +119,7 @@ public class Ltudjava18hcb18424016bt1 {
             } else {
                 if (br != null) {
                     while ((line = br.readLine()) != null) {
-                        //System.out.println(line);
+                        System.out.println(line);
                         WriteData(Path, line);
                     }
                 }
@@ -217,7 +223,7 @@ public class Ltudjava18hcb18424016bt1 {
 
     public static int ChooseFunction() throws IOException {
         CreateFolder();
-        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
         int function = 0;
         System.out.println("Chọn chức năng: ");
         System.out.println("1: Import danh sách sinh viên 1 lớp.");
@@ -246,7 +252,7 @@ public class Ltudjava18hcb18424016bt1 {
     }
 
     public static int Countiue() throws IOException {
-        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
         int continueF = 0;
         System.out.print("Thực hiện tiếp chương trình (1: Có, 0: Không): ");
         String strC = dataIn.readLine();
@@ -264,7 +270,7 @@ public class Ltudjava18hcb18424016bt1 {
     }
 
     public static void DQ() throws IOException {
-        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
         int function = ChooseFunction();
         if (function == 1) {
             ImportFile(dataIn, "Class_");
@@ -420,7 +426,7 @@ public class Ltudjava18hcb18424016bt1 {
             ImportFile(dataIn, "Score_");
         } else if (function == 8) {
             int Choose = 2;
-            System.out.print("Chọn chức năng (0: Xem danh sách điểm, 1: Xem danh sách sinh viên đậu, rớt), 2: Xem tỉ lệ sinh viên đậu, rớt : ");
+            System.out.print("Chọn chức năng (0: Xem danh sách điểm, 1: Xem danh sách sinh viên đậu, rớt, 2: Xem tỉ lệ sinh viên đậu, rớt: ");
             // Tiến hành đọc từ bàn phím
             String strF = dataIn.readLine();
             Pattern pattern = Pattern.compile("\\d*");
